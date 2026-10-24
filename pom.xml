@@ -84,6 +84,15 @@
                             <groups>framework</groups>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.15.0</version>
+                        <configuration>
+                            <source>26</source> <!-- Update this to the correct Java version -->
+                            <target>26</target> <!-- Update this to the correct Java version -->
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
 

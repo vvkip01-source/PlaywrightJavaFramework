@@ -12,9 +12,9 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '25'
+          java-version: '26'
       - name: Build & Install
-        run: mvn -B install -D skipTests --no-transfer-progress
+        run: mvn -B install -D skipTests --no-transfer-progress -X
       - name: Ensure browsers are installed
         run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
       - name: Run tests

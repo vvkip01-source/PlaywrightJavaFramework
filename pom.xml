@@ -72,7 +72,7 @@
     </dependencies>
     <profiles>
         <profile>
-            <id>Regression</id>
+            <id>framework</id>
 
             <build>
                 <plugins>

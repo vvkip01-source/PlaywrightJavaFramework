@@ -10,7 +10,7 @@ on:
       browser:
         description: 'Browser to run tests on'
         required: true
-        default: 'firefox'
+        default: 'chrome'
         type: choice
         options:
           - chrome
@@ -19,7 +19,7 @@ on:
       environment:
         description: 'Environment to run tests against'
         required: true
-        default: 'dev'
+        default: 'qa'
         type: choice
         options:
           - qa

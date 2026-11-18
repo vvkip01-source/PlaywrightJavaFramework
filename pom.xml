@@ -61,19 +61,10 @@
             <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.junit.support/testng-engine -->
-        <dependency>
-            <groupId>org.junit.support</groupId>
-            <artifactId>testng-engine</artifactId>
-            <version>1.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
     <profiles>
         <profile>
-            <id>framework</id>
-
+            <id>Regression</id>
             <build>
                 <plugins>
                     <plugin>
@@ -81,7 +72,32 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>3.5.4</version>
                         <configuration>
-                            <groups>framework</groups>
+                            <groups>Regression</groups>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.15.0</version>
+                        <configuration>
+                            <source>26</source> <!-- Update this to the correct Java version -->
+                            <target>26</target> <!-- Update this to the correct Java version -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+        <profile>
+            <id>Smoke</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.4</version>
+                        <configuration>
+                            <groups>Smoke</groups>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -101,6 +117,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>

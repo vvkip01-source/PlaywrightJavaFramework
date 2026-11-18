@@ -17,6 +17,7 @@ public class TestBase {
     String base_url;
     String booking_reference;
     BrowserContext context;
+    String testType;
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws IOException {
@@ -27,6 +28,7 @@ public class TestBase {
         //mvn test -PFramework -Dbrowser=chrome -Denv=dev
         String browserName = System.getProperty("browser") != null ? System.getProperty("browser") : prop.getProperty("browser");
         String envName = System.getProperty("env") != null ? System.getProperty("env") : prop.getProperty("env");
+        String testTypeName = System.getProperty("test_type") != null ? System.getProperty("test_type") : prop.getProperty("test_type");
         // String browserName = prop.getProperty("browser");
         playwright = Playwright.create();
 
@@ -35,7 +37,7 @@ public class TestBase {
         } else if ("safari".equals(browserName)) {
             browser = playwright.webkit().launch();
         } else {
-            browser=playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+            browser=playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
             //browser = playwright.chromium().launch();
         }
         context = browser.newContext();
@@ -48,7 +50,7 @@ public class TestBase {
         page.setDefaultTimeout(5000);
 
         base_url = prop.getProperty(envName + ".base_url");
-
+        testType = testTypeName;
     }
     @AfterMethod()
     public void tearDown()

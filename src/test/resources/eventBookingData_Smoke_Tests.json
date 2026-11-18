@@ -1,0 +1,17 @@
+[
+  {
+    "titlePrefix": "AI and ML Tech Conference",
+    "description": "Annual technology conference for QA professionals SMOKE Test Scenario",
+    "city": "Mumbai",
+    "venue": "BKC Convention Center",
+    "dateTime": "2027-02-15T10:00",
+    "price": "1500",
+    "totalSeats": "100",
+    "fullName": "Venkatesh V",
+    "email": "vvkip01@example.com",
+    "phone": "9820000000",
+    "numberoftickets": "1",
+    "cancelBooking": "true",
+    "deleteEvent": "true"
+  }
+]

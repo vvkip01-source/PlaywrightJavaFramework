@@ -1,6 +1,8 @@
 package tests;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.*;
@@ -19,7 +21,7 @@ public class FrameworkBuildDataDrivenTest extends TestBase {
         return  DataProviderUtil.getJsonDataToMap("/src/test/resources/eventBookingData.json");
     }
 
-    @Test(groups = {"framework"},dataProvider = "eventBookingData", priority=1, description = "Create an Event -verify if its created successfully")
+    @Test(groups = {"Smoke","Regression"},dataProvider = "eventBookingData", priority=0, description = "Create an Event -verify if its created successfully")
     public void CreateEventTest(HashMap<String,String> data) throws InterruptedException {
 
         LoginPage loginPage = new LoginPage(page, base_url);
@@ -43,12 +45,13 @@ public class FrameworkBuildDataDrivenTest extends TestBase {
         );
 
         //Step 2 - Find newly created event in the events page
+        Thread.sleep(2000);
         eventsPage.goTo();
         Locator eventCardsAfterCreatingEvent = eventsPage.waitForEventsToLoad();
         System.out.println("No.of Events in the page after Creating Event: " + eventCardsAfterCreatingEvent.count());
         Locator targetCard = eventsPage.findEventCard(data.get("titlePrefix"));
     }
-    @Test(groups = {"framework"},dataProvider = "eventBookingData", priority=2, description = "Book an Event -verify if its booked successfully")
+    @Test(groups = {"Smoke"},dataProvider = "eventBookingData", priority=1, description = "Book an Event -verify if its booked successfully")
     public void BookEventTest(HashMap<String,String> data) throws InterruptedException
     {
         LoginPage loginPage = new LoginPage(page, base_url);
@@ -62,6 +65,7 @@ public class FrameworkBuildDataDrivenTest extends TestBase {
         System.out.println("Seats available before booking: " + seatsNumBeforeBooking);
 
         // Step 3 - Book the event and verify the seats count after booking
+        Thread.sleep(3000);
         BookingFormPage bookingFormPage = eventsPage.proceedToBookingEvent(targetCard);
         bookingFormPage.fillAndConfirm(data.get("fullName"),
                 data.get("email"),
@@ -91,6 +95,57 @@ public class FrameworkBuildDataDrivenTest extends TestBase {
         Locator targetBookingCard = bookingsPage.findBookingCard(booking_reference, bookingsCards);
         BookingDetailsPage bookingDetailsPage = bookingsPage.viewBookingDetails(targetBookingCard);
         bookingDetailsPage.verifyBookingDetailsPageIsDisplayed();
+        Boolean cancelBooking = Boolean.parseBoolean(data.get("cancelBooking"));
+        if (cancelBooking) {
+            // Step 7 - Cancel the booking and verify the cancellation
+            bookingDetailsPage.cancelBooking();
+            bookingDetailsPage.verifyBookingCancellationSuccess();
+            // Step 8 - Verify the booking count decreased by 1
+            int finalBookingCount = page.locator("a[href*=\"/bookings/\"]").count();
+            System.out.println("Booking Count post Cancellation: " + finalBookingCount);
+        }
+    }
+    @Test(groups = {"Smoke"},priority=2,description = "booked ticket cancelled successfully")
+    public void ClearBookings() throws InterruptedException {
+        LoginPage loginPage = new LoginPage(page, base_url);
+        DashboardPage dashboardPage = loginPage.loginToApplication();
+        dashboardPage.waitForEventsToLoad();
 
+        BookingsPage bookingsPage = new BookingsPage(page);
+        bookingsPage.goTo();
+        Thread.sleep(2000); // Wait for the page to load and display bookings
+
+        page.onDialog(dialog -> dialog.accept());
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Clear all bookings")).click();
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+    }
+
+    @Test(groups = {"Regression"}, dataProvider = "eventBookingData", description = "Delete a specific event and verify it is removed")
+    public void DeleteEventTest(HashMap<String,String> data) throws InterruptedException {
+        if(data.get("deleteEvent").equalsIgnoreCase("true")) {
+            LoginPage loginPage = new LoginPage(page, base_url);
+            DashboardPage dashboardPage = loginPage.loginToApplication();
+            dashboardPage.waitForEventsToLoad();
+
+            AdminEventsPage adminEventsPage = new AdminEventsPage(page);
+            adminEventsPage.goTo();
+            Thread.sleep(2000); // Wait for the page to load and display events
+            adminEventsPage.deleteEvent(data.get("titlePrefix"));
+            adminEventsPage.verifyEventNotVisible(data.get("titlePrefix"));
+        }
+        else {
+            System.out.println("Skipping DeleteEventTest for event: " + data.get("titlePrefix") + " as deleteEvent is set to false.");
+        }
+    }
+
+    @Test(groups = {"Smoke"}, priority=3, description = "Delete all created events from admin events page")
+    public void DeleteAllCreatedEventsTest() throws InterruptedException {
+        LoginPage loginPage = new LoginPage(page, base_url);
+        DashboardPage dashboardPage = loginPage.loginToApplication();
+        dashboardPage.waitForEventsToLoad();
+
+        AdminEventsPage adminEventsPage = new AdminEventsPage(page);
+        adminEventsPage.goTo();
+        adminEventsPage.deleteAllEvents();
     }
 }

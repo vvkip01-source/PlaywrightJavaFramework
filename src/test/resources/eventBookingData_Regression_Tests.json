@@ -1,0 +1,32 @@
+[
+  {
+    "titlePrefix": "AI and ML Tech Conference",
+    "description": "Annual technology conference for QA professionals RG Test Scenario",
+    "city": "Mumbai",
+    "venue": "BKC Convention Center",
+    "dateTime": "2027-02-15T10:00",
+    "price": "1500",
+    "totalSeats": "100",
+    "fullName": "Venkatesh V",
+    "email": "vvkip01@example.com",
+    "phone": "9820000000",
+    "numberoftickets": "1",
+    "cancelBooking": "false",
+    "deleteEvent": "false"
+  },
+  {
+    "titlePrefix": "Music Festival",
+    "description": "Live music festival with top artists RG Test Scenario",
+    "city": "Mumbai",
+    "venue": "BKC Palace Grounds",
+    "dateTime": "2027-03-20T18:00",
+    "price": "2500",
+    "totalSeats": "200",
+    "fullName": "Venkatesh V",
+    "email": "vvkip02@example.com",
+    "phone": "9821000000",
+    "numberoftickets": "2",
+    "cancelBooking": "true",
+    "deleteEvent": "true"
+  }
+]

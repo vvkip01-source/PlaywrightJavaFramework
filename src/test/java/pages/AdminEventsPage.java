@@ -1,6 +1,8 @@
 package pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -38,5 +40,28 @@ public class AdminEventsPage {
         assertThat(page.getByText(SUCCESS_TOAST)).isVisible();
     }
 
+    public void deleteEvent(String eventTitle) {
+        Locator eventRow = page.locator("tr").filter(new Locator.FilterOptions().setHasText(eventTitle));
+        assertThat(eventRow).isVisible();
+
+        eventRow.getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName("Delete")).click();
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete Event")).click();
+    }
+
+    public void verifyEventNotVisible(String eventTitle) {
+        Locator matchingEvents = page.locator("tr").filter(new Locator.FilterOptions().setHasText(eventTitle));
+        assertThat(matchingEvents).hasCount(0);
+    }
+
+    public void deleteAllEvents() throws InterruptedException {
+        Locator deleteButtons = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete"));
+        Thread.sleep(2000); // Wait for the page to load and buttons to be available
+        while (deleteButtons.count() > 0) {
+            deleteButtons.first().click();
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete Event")).isVisible();
+            page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete Event")).click();
+        }
+        assertThat(page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Delete"))).hasCount(0);
+    }
 
 }

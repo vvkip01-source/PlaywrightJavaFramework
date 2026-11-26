@@ -38,7 +38,7 @@ public class BasicTest {
         page.getByLabel("Password").fill("Vvkip01@71984");
         page.getByRole(AriaRole.BUTTON,new Page.GetByRoleOptions().setName("Sign In")).click();
         assertThat(page.getByRole(AriaRole.LINK,
-                new Page.GetByRoleOptions().setName("Browse Events →"))).isVisible();
+                new Page.GetByRoleOptions().setName("Browse Events →"))).isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(2000));
 
         page.locator("#nav-events").click(new Locator.ClickOptions().setTimeout(10000));
         //page.setDefaultTimeout(12000);

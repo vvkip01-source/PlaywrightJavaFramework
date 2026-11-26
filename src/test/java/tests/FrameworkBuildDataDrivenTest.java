@@ -113,8 +113,8 @@ public class FrameworkBuildDataDrivenTest extends TestBase {
 
         BookingsPage bookingsPage = new BookingsPage(page);
         bookingsPage.goTo();
-        Thread.sleep(2000); // Wait for the page to load and display bookings
-
+        //Thread.sleep(2000); // Wait for the page to load and display bookings
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Clear all bookings")).isVisible();
         page.onDialog(dialog -> dialog.accept());
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Clear all bookings")).click();
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
